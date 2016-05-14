@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Required meta tags always come first -->
+<meta charset="utf-8">
+<title>NMI Transport &mdash; RBS A</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+
+<!-- Latest compiled and minified Bootstrap CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+<link rel="stylesheet" href="css/map.css">
+
+</head>
+
+<body>
+    <div class="container-fluid content">
+        <div class="map-container">
+            <div id="map"></div>
+        </div>
+        <div class="title-div">
+            <h1 class="title-text">NMI Transport &mdash; Getting You There in Style</h1>
+        </div>
+
+        <div class="search-div">
+            <div class="form-group pad-2rem">
+                <input data-bind="value: searchStops, valueUpdate: 'keyup'" type="text" class="form-control" placeholder="Enter your street name...">
+            </div>
+        </div>
+
+        <div class="list-div">
+            <p><span class="list-title">Which stop is best for you?</span>
+                <ul class="list-unstyled" data-bind="foreach: filteredStops">
+                    <li class="list-text" data-bind="text: name"></li>
+                </ul>
+            </p>
+        </div>
+
+    </div><!-- end of container -->
+</body>
+<footer>
+    <script src="js/knockout-3.4.0.js"></script>
+    <script src="js/app.js"></script>
+</footer>
+</html>

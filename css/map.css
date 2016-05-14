@@ -1,0 +1,148 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.container-fluid {
+    padding: 0;
+}
+
+#map {
+    height: 100%;
+}
+
+.map-container {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    background-color: #ccc;
+}
+
+.title-div {
+    background-color: rgba(133, 185, 126,.8);
+    color: white;
+    position: absolute;
+    width: 100%;
+    height: 4rem;
+    z-index: 5;
+}
+
+.title-text {
+    margin-top: .5rem;
+    font-weight: 700;
+    text-align: center;
+    font-size: 120%;
+}
+
+.search-div {
+    background-color: rgba(128, 135, 188,.8);
+    display: inline-block;
+    color: white;
+    position: absolute;
+    top: 5rem;
+    width: 100%;
+    z-index: 5;
+}
+
+.form-group {
+    margin-bottom: .5rem;
+}
+
+.pad-2rem {
+    padding: 2rem 0;
+}
+
+.list-div {
+    background-color: rgba(128, 135, 188,.8);
+    color: white;
+    position: absolute;
+    top: 14rem;
+    width: 100%;
+    z-index: 5;
+}
+
+.list-title {
+    font-weight: 500;
+    font-size: 110%;
+}
+
+.list-text {
+    font-weight: 400;
+}
+
+@media (min-width: 640px) {
+    .search-div {
+        width: 49%;
+        padding: 0 1rem;
+    }
+
+    .list-div {
+        top: 5rem;
+        right: 0;
+        width: 49%;
+        padding: 1rem;
+    }
+}
+
+
+@media (min-width: 768px) {
+
+    .title-text {
+        font-weight: 900;
+        font-size: 150%;
+    }
+
+    .list-title {
+        font-weight: 700;
+        font-size: 130%;
+    }
+
+    .list-text {
+        font-weight: 500;
+        font-size: 115%;
+        line-height: 1.5;
+    }
+}
+
+
+@media (min-width: 1200px) {
+    .title-div {
+        height: 12rem;
+    }
+
+    .title-text {
+        padding: 3rem 0 2rem;
+        font-size: 200%;
+    }
+
+    .search-div {
+        padding: 2rem;
+        top: 14rem;
+        height: 12rem;
+        width: 30%;
+    }
+
+    .list-div {
+        padding: 2rem;
+        top: 28rem;
+        right: inherit;
+        width: 30%;
+    }
+
+    .list-title {
+        font-size: 175%;
+    }
+
+    .list-text {
+        font-size: 140%;
+        line-height: 1.5;
+    }
+}
+
+@media (min-width: 1400px) {
+    .search-div,
+    .list-div {
+        width: 25%;
+    }
+}
