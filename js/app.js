@@ -105,6 +105,21 @@ var Stop = function(data) {
     this.description = ko.observable(data.description);
 }
 
+//GOOGLE MAPS API
+var map;
+//create an infowindow outside of the loop so only one window is open at a time
+var infowindow;
+var marker;
+var position = {lat: this.lat, lng: this.lng};
+
+function initMap() {
+    // Create a map object and specify the DOM element for display.
+    map = new google.maps.Map(document.getElementById('map'), {
+        center: {lat: 31.714564, lng: 34.990076},
+        zoom: 16,
+    });
+}
+
 /*
 * VIEW MODEL/CONTROLLER: a pure-code representation of the data and operations on a UI.
 * Implement a list view of the set of locations defined above.
@@ -113,12 +128,29 @@ var Stop = function(data) {
 */
 var ViewModel = function() {
     var self = this;
-
+    self.googleMap = map;
     self.listOfStops = ko.observableArray([]);
+    self.markers= [];
     self.currentStop = ko.observable();
     self.searchStops = ko.observable('');
 
+    // In case of error webpage does one of the following:
+    // A message is displayed notifying the user that the data can't be loaded,
+    // OR There are no negative repercussions to the UI.
+    function googleError() {
+        alert("The Google Maps application has encountered an error.  Please try again later.");
+    };
+
     listOfStops.forEach(function(item){
+        //create new markers
+        marker = new google.maps.Marker({
+            position: new google.maps.LatLng(self.lat, self.lng ),
+            map: self.googleMap,
+            animation: google.maps.Animation.DROP,
+            title: self.name
+        });
+
+        self.markers.push(marker);
         self.listOfStops.push( new Stop(item) );
     });
 
@@ -139,4 +171,7 @@ var ViewModel = function() {
     }, self);
 }
 
-ko.applyBindings(new ViewModel());
+function loadMap() {
+  initMap();
+  ko.applyBindings(new ViewModel());
+}
