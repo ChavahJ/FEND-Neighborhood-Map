@@ -5,7 +5,7 @@
 * Model decides content of the application.
 */
 
-var listOfStops = [
+var allStops = [
     {
         name: "Kehillos Yaakov Synagogue",
         lat: 31.714564,
@@ -108,8 +108,7 @@ var Stop = function(data) {
 //GOOGLE MAPS API
 var map;
 //create an infowindow outside of the loop so only one window is open at a time
-var infowindow;
-var marker;
+var infowindow, marker, i;
 var position = {lat: this.lat, lng: this.lng};
 
 function initMap() {
@@ -129,7 +128,8 @@ function initMap() {
 var ViewModel = function() {
     var self = this;
     self.googleMap = map;
-    self.listOfStops = ko.observableArray([]);
+    self.allStops = ko.observableArray([]);
+    self.filteredStops = ko.observableArray([]);
     self.markers= [];
     self.currentStop = ko.observable();
     self.searchStops = ko.observable('');
@@ -141,34 +141,34 @@ var ViewModel = function() {
         alert("The Google Maps application has encountered an error.  Please try again later.");
     };
 
-    listOfStops.forEach(function(item){
-        //create new markers
-        marker = new google.maps.Marker({
-            position: new google.maps.LatLng(self.lat, self.lng ),
-            map: self.googleMap,
-            animation: google.maps.Animation.DROP,
-            title: self.name
+    allStops.forEach(function(item){
+            self.allStops.push( new Stop(item) );
         });
 
-        self.markers.push(marker);
-        self.listOfStops.push( new Stop(item) );
-    });
+    self.filteredStops = ko.computed(function () {
+        var search = self.searchStops().toLowerCase();
+        if(!search) {
+            return self.allStops();
+        } else {
+            return ko.utils.arrayFilter(self.allStops(), function(item) {
+                return item.streets.indexOf(search) !== -1;
+            });
+        }
+    }, self);
+
+    self.addMarkers = ko.computed(function() {
+        for (i = 0; i < self.filteredStops().length; i++) {
+            marker = new google.maps.Marker ({
+                position: new google.maps.LatLng(self.filteredStops()[i].lat(), self.filteredStops()[i].lng()),
+                map: map
+            });
+        }
+    }, self);
 
     //determine which infoWindow is showing and which marker is bouncing
     self.setCurrentStop = function(data) {
         self.currentStop(data);
     };
-
-    self.filteredStops = ko.computed(function () {
-        var search = self.searchStops().toLowerCase();
-        if(!search) {
-            return self.listOfStops();
-        } else {
-            return ko.utils.arrayFilter(self.listOfStops(), function(item) {
-                return item.streets.indexOf(search) !== -1;
-            });
-        }
-    }, self);
 }
 
 function loadMap() {
