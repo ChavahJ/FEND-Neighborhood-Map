@@ -99,8 +99,6 @@ var allStops = [
 //GOOGLE MAPS API
 var map;
 //create an infowindow outside of the loop so only one window is open at a time
-var infowindow, marker;
-
 function initMap() {
     // Create a map object and specify the DOM element for display.
     map = new google.maps.Map(document.getElementById('map'), {
@@ -116,10 +114,19 @@ var Stop = function(data) {
     this.streets = ko.observableArray(data.streets);
     this.description = ko.observable(data.description);
 
+    var infowindow = new google.maps.InfoWindow();
+
+    var marker, i;
+
     this.marker = new google.maps.Marker({
         map: map,
         position: new google.maps.LatLng(data.lat, data.lng),
         animation: google.maps.Animation.DROP
+    });
+
+    google.maps.event.addListener(this.marker, 'click', function() {
+            this.infowindow.setContent('<p>TESTING</p>');
+            this.infowindow.open(map, this.marker);
     });
 
     this.marker.isVisible = ko.observable(true);
