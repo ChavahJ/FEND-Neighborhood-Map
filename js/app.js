@@ -96,20 +96,10 @@ var allStops = [
 * VIEW: your application’s bindings.
 * Implement a list view of the set of locations defined above.
 */
-
-var Stop = function(data) {
-    this.name = ko.observable(data.name);
-    this.lat = ko.observable(data.lat);
-    this.lng = ko.observable(data.lng);
-    this.streets = ko.observableArray(data.streets);
-    this.description = ko.observable(data.description);
-}
-
 //GOOGLE MAPS API
 var map;
 //create an infowindow outside of the loop so only one window is open at a time
-var infowindow, marker, i;
-var position = {lat: this.lat, lng: this.lng};
+var infowindow, marker;
 
 function initMap() {
     // Create a map object and specify the DOM element for display.
@@ -117,6 +107,22 @@ function initMap() {
         center: {lat: 31.714564, lng: 34.990076},
         zoom: 16,
     });
+}
+
+var Stop = function(data) {
+    this.name = ko.observable(data.name);
+    this.lat = ko.observable(data.lat);
+    this.lng = ko.observable(data.lng);
+    this.streets = ko.observableArray(data.streets);
+    this.description = ko.observable(data.description);
+
+    this.marker = new google.maps.Marker({
+        map: map,
+        position: new google.maps.LatLng(data.lat, data.lng),
+        animation: google.maps.Animation.DROP
+    });
+
+    this.marker.isVisible = ko.observable(true);
 }
 
 /*
@@ -130,7 +136,7 @@ var ViewModel = function() {
     self.googleMap = map;
     self.allStops = ko.observableArray([]);
     self.filteredStops = ko.observableArray([]);
-    self.markers= [];
+    self.markers = [];
     self.currentStop = ko.observable();
     self.searchStops = ko.observable('');
 
@@ -151,16 +157,13 @@ var ViewModel = function() {
             return self.allStops();
         } else {
             return ko.utils.arrayFilter(self.allStops(), function(item) {
-                return item.streets.indexOf(search) !== -1;
-            });
-        }
-    }, self);
-
-    self.addMarkers = ko.computed(function() {
-        for (i = 0; i < self.filteredStops().length; i++) {
-            marker = new google.maps.Marker ({
-                position: new google.maps.LatLng(self.filteredStops()[i].lat(), self.filteredStops()[i].lng()),
-                map: map
+                if (item.streets.indexOf(search) !== -1) {
+                    item.marker.setVisible(true);
+                    return true;
+                } else {
+                    item.marker.setVisible(false);
+                    return false;
+                }
             });
         }
     }, self);
