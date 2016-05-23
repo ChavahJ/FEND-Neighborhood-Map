@@ -4,20 +4,20 @@
 
 ##To Complete This Project##
 
-1. ~~Review our course JavaScript Design Patterns.~~
-2. ~~Download the Knockout framework.~~
-3. Knockout must be used to handle list, filter, and any other information on the page that is subject to changing state.
-4. Things that should not be handled by knockout: anything the map api is used for, creating markers, tracking their click events, making the map, refreshing the map.
-5. Write code required to add a full-screen map to your page using the Google Maps API. For sake of efficiency, the map API should be called only once.
-6. Write code required to display map markers identifying at least 5 locations that you are interested in within this neighborhood. Your app should display those locations by default when the page is loaded.
-7. Implement a list view of the set of locations defined in step 4.
-8. Provide a filter option that uses an input field to filter both the list view and the map markers displayed by default on load.
-9. The list view and the markers should update accordingly. Providing a search function through a third-party API is not enough to meet specifications.
-10. Add functionality using third-party APIs to provide information when a map marker or list view entry is clicked (ex. Yelp reviews, Wikipedia, Flickr images, etc). Note that StreetView and Places don't count as an additional 3rd party API because they are libraries included in the Google Maps API. Please provide attribution to the data sources/APIs you use.
-11. Add functionality to animate a map marker when either the list item associated with it or the map marker itself is selected.
-12. Add functionality to open an infoWindow with the information described in step 7 when either a location is selected from the list view or its map marker is selected directly.
-13. The app's interface should be intuitive to use. For example, the input text area to filter locations should be easy to locate. It should be easy to understand what set of locations is being filtered. Selecting a location via list item or map marker should cause the map marker to bounce or in some other way animate to indicate that the location has been selected and associated info window should open above map marker with additional information.
-14. Error Handling: In case of error (e.g. in a situation where a third party api does not return the expected result) we expect your webpage to do one of the following: A message is displayed notifying the user that the data can't be loaded, OR There are no negative repercussions to the UI. Note: Please note that we expect students to handle errors if the browser has trouble initially reaching the 3rd-party site as well. It is important to handle errors to give users a consistent and good experience with the webpage. We strongly encourage you to explore ways to handle errors in the library you are using to make API calls.
+1. [x] Review our course JavaScript Design Patterns.
+2. [x] Download the Knockout framework.
+3. [ ] Knockout must be used to handle list, filter, and any other information on the page that is subject to changing state.
+4. [ ] Things that should not be handled by knockout: anything the map api is used for, creating markers, tracking their click events, making the map, refreshing the map.
+5. [x] Write code required to add a full-screen map to your page using the Google Maps API. For sake of efficiency, the map API should be called only once.
+6. [x] Write code required to display map markers identifying at least 5 locations that you are interested in within this neighborhood. Your app should display those locations by default when the page is loaded.
+7. [x] Implement a list view of the set of locations defined in step 4.
+8. [x] Provide a filter option that uses an input field to filter both the list view and the map markers displayed by default on load.
+9. [x] The list view and the markers should update accordingly. Providing a search function through a third-party API is not enough to meet specifications.
+10. [ ] Add functionality using third-party APIs to provide information when a map marker or list view entry is clicked (ex. Yelp reviews, Wikipedia, Flickr images, etc). Note that StreetView and Places don't count as an additional 3rd party API because they are libraries included in the Google Maps API. Please provide attribution to the data sources/APIs you use.
+11. [ ] Add functionality to animate a map marker when either the list item associated with it or the map marker itself is selected.
+12. [ ] Add functionality to open an infoWindow with the information described in step 7 when either a location is selected from the list view or its map marker is selected directly.
+13. [ ] The app's interface should be intuitive to use. For example, the input text area to filter locations should be easy to locate. It should be easy to understand what set of locations is being filtered. Selecting a location via list item or map marker should cause the map marker to bounce or in some other way animate to indicate that the location has been selected and associated info window should open above map marker with additional information.
+14. [ ] Error Handling: In case of error (e.g. in a situation where a third party api does not return the expected result) we expect your webpage to do one of the following: A message is displayed notifying the user that the data can't be loaded, OR There are no negative repercussions to the UI. Note: Please note that we expect students to handle errors if the browser has trouble initially reaching the 3rd-party site as well. It is important to handle errors to give users a consistent and good experience with the webpage. We strongly encourage you to explore ways to handle errors in the library you are using to make API calls.
 
 ##Project Criteria##
 
