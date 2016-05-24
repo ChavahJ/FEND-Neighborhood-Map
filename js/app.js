@@ -97,7 +97,7 @@ var allStops = [
 * Implement a list view of the set of locations defined above.
 */
 //GOOGLE MAPS API
-var map;
+var map, marker, infowindow;
 //create an infowindow outside of the loop so only one window is open at a time
 function initMap() {
     // Create a map object and specify the DOM element for display.
@@ -114,22 +114,20 @@ var Stop = function(data) {
     this.streets = ko.observableArray(data.streets);
     this.description = ko.observable(data.description);
 
-    var infowindow = new google.maps.InfoWindow();
+    infowindow = new google.maps.InfoWindow();
 
-    var marker, i;
-
-    this.marker = new google.maps.Marker({
+    marker = new google.maps.Marker({
         map: map,
         position: new google.maps.LatLng(data.lat, data.lng),
         animation: google.maps.Animation.DROP
     });
 
-    google.maps.event.addListener(this.marker, 'click', function() {
-            this.infowindow.setContent('<p>TESTING</p>');
-            this.infowindow.open(map, this.marker);
+    marker.addListener('click', function() {
+        infowindow.setContent(data.description);
+        infowindow.open(map, this);
     });
 
-    this.marker.isVisible = ko.observable(true);
+    marker.isVisible = ko.observable(true);
 }
 
 /*
@@ -146,13 +144,6 @@ var ViewModel = function() {
     self.markers = [];
     self.currentStop = ko.observable();
     self.searchStops = ko.observable('');
-
-    // In case of error webpage does one of the following:
-    // A message is displayed notifying the user that the data can't be loaded,
-    // OR There are no negative repercussions to the UI.
-    function googleError() {
-        alert("The Google Maps application has encountered an error.  Please try again later.");
-    };
 
     allStops.forEach(function(item){
             self.allStops.push( new Stop(item) );
@@ -175,6 +166,24 @@ var ViewModel = function() {
         }
     }, self);
 
+    // self.filteredStops = ko.computed(function () {
+    //     var search = self.searchStops().toLowerCase();
+    //         return ko.utils.arrayFilter(self.allStops(), function(item) {
+    //             item.streets.forEach(function(street){
+    //                 if (street.indexOf(search) > -1) {
+    //                     item.marker.setVisible(true);
+    //                     return true;
+    //                 } else if (item.name().indexOf(search) > -1) {
+    //                     item.marker.setVisible(true);
+    //                     return true;
+    //                 } else {
+    //                     item.marker.setVisible(false);
+    //                     return false;
+    //                 }
+    //             });
+    //         }
+    //     }, self);
+
     //determine which infoWindow is showing and which marker is bouncing
     self.setCurrentStop = function(data) {
         self.currentStop(data);
@@ -185,3 +194,10 @@ function loadMap() {
   initMap();
   ko.applyBindings(new ViewModel());
 }
+
+// In case of error webpage does one of the following:
+// A message is displayed notifying the user that the data can't be loaded,
+// OR There are no negative repercussions to the UI.
+function googleError() {
+    alert("The Google Maps application has encountered an error.  Please try again later.");
+};
