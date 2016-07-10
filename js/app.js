@@ -113,23 +113,7 @@ var Stop = function(data) {
     this.lng = ko.observable(data.lng);
     this.streets = ko.observableArray(data.streets);
     this.description = ko.observable(data.description);
-
-    infowindow = new google.maps.InfoWindow();
-
-    marker = new google.maps.Marker({
-        map: map,
-        position: new google.maps.LatLng(data.lat, data.lng),
-        animation: google.maps.Animation.DROP
-    });
-
-    this.marker = marker;
-
-    this.marker.addListener('click', function() {
-        infowindow.setContent('<h3>'+data.name+'</h3>' + '<p>' + data.description + '</p>');
-        infowindow.open(map, this);
-    });
-
-    this.marker.isVisible = ko.observable(true);
+    this.marker = ko.observable({});
 }
 
 /*
@@ -141,29 +125,57 @@ var Stop = function(data) {
 var ViewModel = function() {
     var self = this;
     self.googleMap = map;
-    self.allStops = ko.observableArray(allStops);
+    self.allStops = ko.observableArray([]);
     self.filteredStops = ko.observableArray([]);
-    self.markers = [];
     self.currentStop = self.allStops[0];
     self.searchOfStops = ko.observable(""); //holds query
+    self.match = ko.observable(false);
+    self.infowindow = new google.maps.InfoWindow();
+    var marker, i;
+    var markers = [];
+
 
     allStops.forEach(function(item){
             self.allStops.push( new Stop(item) );
         });
 
+    this.resetMarkers = function() {
+        for (i = 0; i < self.allStops().length; i++) {
+        self.allStops()[i].marker.setVisible(true);
+        }
+    };
+
+    for (i = 0; i < self.allStops().length; i++) {
+        marker = new google.maps.Marker({
+            position: new google.maps.LatLng(self.allStops()[i].lat(), self.allStops()[i].lng()),
+            map: map
+        });
+
+        marker.addListener('click', function() {
+            infowindow.setContent('<h3>'+data.name+'</h3>' + '<p>' + data.description + '</p>');
+            infowindow.open(map, this);
+            });
+    }
+
+    //self.allStops()[i].marker = self.marker;
+
     self.filteredStops = ko.computed(function () {
         var search = self.searchOfStops().toLowerCase();
         if(!search) {
+            this.resetMarkers();
             return self.allStops();
         } else {
+            this.resetMarkers();
             return ko.utils.arrayFilter(self.allStops(), function(item) {
                 console.log(search);
-                if (item.streets.indexOf(search) !== -1) {
-                    item.marker.setVisible(true);
-                    return true;
-                } else {
+                match = item.name().toLowerCase().indexOf(search) !== -1;
+
+                if (!match) {
                     item.marker.setVisible(false);
                     return false;
+                } else {
+                    item.marker.setVisible(true);
+                    return true;
                 }
             });
         }
