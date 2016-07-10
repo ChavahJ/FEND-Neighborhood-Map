@@ -122,12 +122,14 @@ var Stop = function(data) {
         animation: google.maps.Animation.DROP
     });
 
-    marker.addListener('click', function() {
+    this.marker = marker;
+
+    this.marker.addListener('click', function() {
         infowindow.setContent('<h3>'+data.name+'</h3>' + '<p>' + data.description + '</p>');
         infowindow.open(map, this);
     });
 
-    marker.isVisible = ko.observable(true);
+    this.marker.isVisible = ko.observable(true);
 }
 
 /*
@@ -139,7 +141,7 @@ var Stop = function(data) {
 var ViewModel = function() {
     var self = this;
     self.googleMap = map;
-    self.allStops = ko.observableArray([]);
+    self.allStops = ko.observableArray(allStops);
     self.filteredStops = ko.observableArray([]);
     self.markers = [];
     self.currentStop = self.allStops[0];
@@ -155,6 +157,7 @@ var ViewModel = function() {
             return self.allStops();
         } else {
             return ko.utils.arrayFilter(self.allStops(), function(item) {
+                console.log(search);
                 if (item.streets.indexOf(search) !== -1) {
                     item.marker.setVisible(true);
                     return true;
