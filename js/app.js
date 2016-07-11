@@ -113,24 +113,9 @@ var Stop = function(data) {
     this.lng = ko.observable(data.lng);
     this.streets = ko.observableArray(data.streets);
     this.description = ko.observable(data.description);
+};
 
-    infowindow = new google.maps.InfoWindow();
-
-    marker = new google.maps.Marker({
-        map: map,
-        position: new google.maps.LatLng(data.lat, data.lng),
-        animation: google.maps.Animation.DROP
-    });
-
-    this.marker = marker;
-
-    this.marker.addListener('click', function() {
-        infowindow.setContent('<h3>'+data.name+'</h3>' + '<p>' + data.description + '</p>');
-        infowindow.open(map, this);
-    });
-
-    this.marker.isVisible = ko.observable(true);
-}
+Stop.showStop = ko.observable(true);
 
 /*
 * VIEW MODEL/CONTROLLER: a pure-code representation of the data and operations on a UI.
@@ -141,35 +126,65 @@ var Stop = function(data) {
 var ViewModel = function() {
     var self = this;
     self.googleMap = map;
-    self.allStops = ko.observableArray([]);
+    self.marker = marker;
+    self.InfoWindow = new google.maps.InfoWindow();
+    self.allStops = [];
     self.filteredStops = ko.observableArray([]);
     self.searchOfStops = ko.observable(""); //holds query
+    self.allStopsLength = self.allStops.length;
+    self.currentStop = self.allStops[0];
 
     allStops.forEach(function(item){
-            self.allStops.push( new Stop(item) );
+            self.allStops.push( new google.maps.Marker({
+                map: map,
+                position: new google.maps.LatLng(item.lat, item.lng),
+                name: item.name,
+                show: item.showStop,
+                animation: google.maps.Animation.DROP
+            }));
+            console.log(item.showStop);
         });
 
-    self.filteredStops = ko.computed(function () {
-        var search = self.searchOfStops().toLowerCase();
-        if(!search) {
-            return self.allStops();
-        } else {
-            return ko.utils.arrayFilter(self.allStops(), function(item) {
-                console.log(search);
-                if (item.streets.indexOf(search) !== -1) {
-                    item.marker.setVisible(true);
-                    return true;
-                } else {
-                    item.marker.setVisible(false);
-                    return false;
-                }
-            });
-        }
-    }, self);
+    self.makeBounce = function(item) {
+        item.setAnimation(google.maps.Animation.BOUNCE);
+        setTimeout(function(){item.setAnimation(null); }, 700);
+    }
 
-    self.setCurrentStop = function(data) {
-        self.currentStop(data);
-    };
+    for (var i = 0; i < self.allStopsLength; i++ ) {
+        item.addListener('click', function() {
+            infowindow.setContent('<h3>'+data.name+'</h3>' + '<p>' + data.description + '</p>');
+            infowindow.open(map, this);
+        });
+    }
+
+    self.filteredStops = function() {
+        var currentQuery = self.searchOfStops();
+        console.log(currentQuery);
+        infowindow.close();
+
+        if (currentQuery.length === 0) {
+            self.showAll(true);
+        } else {
+            for (var i = 0; i < self.allStopsLength; i++ ) {
+                if (self.allStops[i].name.toLowerCase().indexOf(currentQuery.toLowerCase()) > -1 ) {
+                    self.allStops[i].show(true);
+                    self.allStops[i].setVisible(true);
+                } else {
+                    self.allStops[i].show(false);
+                    self.allStops[i].setVisible(false);
+                }
+            }
+        }
+        infowindow.close();
+    }
+
+    self.showAll = function(showAttribute) {
+        for (var i = 0; i < self.allStopsLength; i++ ) {
+            self.allStops[i].show(showAttribute);
+            self.allStops[i].setVisible(showAttribute);
+        }
+    }
+
 }
 
 function loadMap() {

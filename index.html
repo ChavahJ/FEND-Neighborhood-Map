@@ -30,8 +30,8 @@
 
         <div class="list-div">
             <p><span class="list-title">Which stop is best for you?</span>
-                <ul class="list-unstyled" data-bind="foreach: filteredStops">
-                    <li class="list-text" data-bind="text: name"></li>
+                <ul class="list-unstyled" data-bind="foreach: allStops">
+                    <li class="list-text" data-bind="text: name, visible: showStop"></li>
                 </ul>
             </p>
         </div>
