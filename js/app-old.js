@@ -92,7 +92,14 @@ var allStops = [
     }
 ];
 
+/*
+* VIEW: your application’s bindings.
+* VIEW: is really the html file
+* Implement a list view of the set of locations defined above.
+*/
 //GOOGLE MAPS API
+var map, marker, infowindow;
+//create an infowindow outside of the loop so only one window is open at a time
 function initMap() {
     // Create a map object and specify the DOM element for display.
     map = new google.maps.Map(document.getElementById('map'), {
@@ -101,13 +108,29 @@ function initMap() {
     });
 }
 
-//PROTOTYPE CONSTRUCTOR
 var Stop = function(data) {
     this.name = ko.observable(data.name);
     this.lat = ko.observable(data.lat);
     this.lng = ko.observable(data.lng);
     this.streets = ko.observableArray(data.streets);
     this.description = ko.observable(data.description);
+
+    infowindow = new google.maps.InfoWindow();
+
+    marker = new google.maps.Marker({
+        map: map,
+        position: new google.maps.LatLng(data.lat, data.lng),
+        animation: google.maps.Animation.DROP
+    });
+
+    this.marker = marker;
+
+    this.marker.addListener('click', function() {
+        infowindow.setContent('<h3>'+data.name+'</h3>' + '<p>' + data.description + '</p>');
+        infowindow.open(map, this);
+    });
+
+    this.marker.isVisible = ko.observable(true);
 }
 
 /*
@@ -117,42 +140,38 @@ var Stop = function(data) {
 * The list view and the markers should update accordingly.
 */
 var ViewModel = function() {
-    var map, marker, infowindow, i;
     var self = this;
     self.googleMap = map;
-    self.marker = marker;
-    self.allMarkers = [];
-    self.InfoWindow = new google.maps.InfoWindow();
-    self.allStops = [];
+    self.allStops = ko.observableArray([]);
     self.filteredStops = ko.observableArray([]);
     self.searchOfStops = ko.observable(""); //holds query
 
     allStops.forEach(function(item){
-        self.allStops.push( new Stop(item) );
-    });
+            self.allStops.push( new Stop(item) );
+        });
 
-    for ( i = 0; i < self.allStops.length; i++) {
-
-            var data = allStops[i];
-
-            var marker = new google.maps.Marker({
-                map: map,
-                position: new google.maps.LatLng(data.lat, data.lng),
-                animation: google.maps.Animation.DROP
+    self.filteredStops = ko.computed(function () {
+        var search = self.searchOfStops().toLowerCase();
+        if(!search) {
+            return self.allStops();
+        } else {
+            return ko.utils.arrayFilter(self.allStops(), function(item) {
+                console.log(search);
+                if (item.streets.indexOf(search) !== -1) {
+                    item.marker.setVisible(true);
+                    return true;
+                } else {
+                    item.marker.setVisible(false);
+                    return false;
+                }
             });
-
-            console.log(data.lat);
-
-            (function(marker, data) {
-                google.maps.event.addListener(marker, "click", function(e) {
-                    infowindow.setContent('<h3>'+data.name+'</h3>' + '<p>' + data.description + '</p>');
-                    infoWindow.open(map, marker);
-                });
-                console.log('I am doing something.')
-            })(marker, data);
         }
+    }, self);
 
-} //end of ViewModel
+    self.setCurrentStop = function(data) {
+        self.currentStop(data);
+    };
+}
 
 function loadMap() {
   initMap();

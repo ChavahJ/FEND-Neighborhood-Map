@@ -24,13 +24,13 @@
 
         <div class="search-div">
             <div class="form-group pad-2rem">
-                <input data-bind="value: searchOfStops, valueUpdate: 'keyup'" type="text" class="form-control" placeholder="Enter your street name...">
+                <!-- <input data-bind="value: searchOfStops, valueUpdate: 'keyup'" type="text" class="form-control" placeholder="Enter your street name..."> -->
             </div>
         </div>
 
         <div class="list-div">
             <p><span class="list-title">Which stop is best for you?</span>
-                <ul class="list-unstyled" data-bind="foreach: filteredStops">
+                <ul class="list-unstyled" data-bind="foreach: allStops">
                     <li class="list-text" data-bind="text: name"></li>
                 </ul>
             </p>
