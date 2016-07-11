@@ -1,5 +1,11 @@
-#To Run This Application#
+##To Run This Application##
+####Either:####
 
+Download this repository to your computer, and open the index.html file in any browser,
+
+####Or:####
+
+Go here.
 
 
 ##To Complete This Project##
