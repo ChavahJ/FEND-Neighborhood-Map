@@ -141,10 +141,8 @@ var Stop = function(data) {
 var ViewModel = function() {
     var self = this;
     self.googleMap = map;
-    self.allStops = ko.observableArray(allStops);
+    self.allStops = ko.observableArray([]);
     self.filteredStops = ko.observableArray([]);
-    self.markers = [];
-    self.currentStop = self.allStops[0];
     self.searchOfStops = ko.observable(""); //holds query
 
     allStops.forEach(function(item){
